@@ -1,0 +1,36 @@
+name: Build and deploy ASP.NET Core app to Azure Web App
+
+on:
+  push:
+    branches:
+      - main  # Change this to your default branch if it's not 'main'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '6.0.x'  # Adjust based on your project
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+
+    - name: Publish
+      run: dotnet publish --configuration Release --output ./publish --no-build
+
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'your-web-app-name'  # Replace with your Azure Web App name
+        slot-name: 'production'  # Default slot is 'production'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile }}
+        package: ./publish  # Path to the published output directory
