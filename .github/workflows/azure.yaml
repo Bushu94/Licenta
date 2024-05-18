@@ -20,12 +20,15 @@ jobs:
 
     - name: Restore dependencies
       run: dotnet restore
+      working-directory: /path/to/your/project  # Ensure this is set correctly
 
     - name: Build
       run: dotnet build --configuration Release --no-restore
+      working-directory: /path/to/your/project  # Ensure this is set correctly
 
     - name: Publish
       run: dotnet publish --configuration Release --output ./publish --no-build
+      working-directory: /path/to/your/project  # Ensure this is set correctly
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
@@ -33,4 +36,4 @@ jobs:
         app-name: 'your-web-app-name'  # Replace with your Azure Web App name
         slot-name: 'production'  # Default slot is 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile }}
-        package: ./publish  # Path to the published output directory
+        package: /path/to/your/project/publish  # Ensure this is set correctly
